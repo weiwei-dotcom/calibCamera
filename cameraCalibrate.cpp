@@ -8,14 +8,15 @@ cameraCalibrate::cameraCalibrate() {
 }
 
 bool cameraCalibrate::getIntrinsic(string cameraName) {
-	//´ÓÎÄ¼şÖĞ²éÕÒÊÇ·ñÓĞÍ¬ÃûµÄÏà»úÄÚ²ÎÎÄ¼ş
-	string calibDataDir("E:\\Visual_ÏîÄ¿\\opencvSFM_VS"); 
-	string IntrinsicFile = calibDataDir + "\\calibData\\Intrinsic" + "\\" + cameraName + ".txt";
-    string calibImgFile = calibDataDir + "\\calibData\\Img\\" + cameraName + "*";
-    // ¶ÁÈ¡Ïà»úµÄÄÚ²ÎÎÄ¼ş
+    //ä»æ–‡ä»¶ä¸­æŸ¥æ‰¾æ˜¯å¦æœ‰åŒåçš„ç›¸æœºå†…å‚æ–‡ä»¶
+    string IntrinsicDir("E:\\Visual_é¡¹ç›®\\opencvSFM_VS\\calibData\\Intrinsic\\");// å†…å‚æ–‡æœ¬æ–‡ä»¶è·¯å¾„
+    string calibImgDir("E:\\Visual_é¡¹ç›®\\opencvSFM_VS\\calibData\\Img\\");       // æ ‡å®šå›¾åƒæ–‡ä»¶è·¯å¾„
+    string IntrinsicFile = IntrinsicDir + cameraName + ".txt";                   // å†…å‚æ–‡æœ¬æ–‡ä»¶
+    string calibImgFile = calibImgDir + cameraName + "*";                        // æ ‡å®šå›¾åƒæ–‡ä»¶
+    // è¯»å–ç›¸æœºçš„å†…å‚æ–‡ä»¶
     ifstream fr(IntrinsicFile);
     if (fr.is_open()) {
-        cout << "Ïà»úÄÚ²ÎÎÄ¼ş´ò¿ª³É¹¦£¬ÕıÔÚ·µ»ØÄÚ²Î¾ØÕó" << endl;
+        cout << "ç›¸æœºå†…å‚æ–‡ä»¶æ‰“å¼€æˆåŠŸï¼Œæ­£åœ¨è¿”å›å†…å‚çŸ©é˜µ" << endl;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 fr >> this->Intrinsic.at<float>(i, j);
@@ -24,27 +25,27 @@ bool cameraCalibrate::getIntrinsic(string cameraName) {
         fr.close();
         return true;
     }
-	// Èç¹ûÏà»úÄÚ²Î¾ØÕó²»´æÔÚ£¬Ôòµ½Ïà»ú±ê¶¨Í¼ÏñÎÄ¼şÖĞ²éÕÒÊÇ·ñÓĞÍ¬ÃûµÄÏà»úÍ¼ÏñÎÄ¼ş
+	// å¦‚æœç›¸æœºå†…å‚çŸ©é˜µä¸å­˜åœ¨ï¼Œåˆ™åˆ°ç›¸æœºæ ‡å®šå›¾åƒæ–‡ä»¶ä¸­æŸ¥æ‰¾æ˜¯å¦æœ‰åŒåçš„ç›¸æœºå›¾åƒæ–‡ä»¶
 	else {
-        cout << "Ïà»úÄÚ²ÎÎÄ¼ş²»´æÔÚ£¬²éÕÒÊÇ·ñ´æÔÚ×ã¹»ÊıÁ¿±ê¶¨Í¼Ïñ" << endl;
+        cout << "ç›¸æœºå†…å‚æ–‡ä»¶ä¸å­˜åœ¨ï¼ŒæŸ¥æ‰¾æ˜¯å¦å­˜åœ¨è¶³å¤Ÿæ•°é‡æ ‡å®šå›¾åƒ" << endl;
 		vector<cv::String> fileNames;
 		cv::glob(calibImgFile, fileNames);
-		// ²»´æÔÚ¶ÔÓ¦µÄ±ê¶¨Í¼Ïñ
+		// ä¸å­˜åœ¨å¯¹åº”çš„æ ‡å®šå›¾åƒ
 		if (fileNames.size() == 0) { 
-			cout << "¸ÃÏà»ú²»´æÔÚ¶ÔÓ¦±ê¶¨Í¼Ïñ£¬ÎŞ·¨Íê³É±ê¶¨" << endl;
+			cout << "è¯¥ç›¸æœºä¸å­˜åœ¨å¯¹åº”æ ‡å®šå›¾åƒï¼Œæ— æ³•å®Œæˆæ ‡å®š" << endl;
 			return false;
 		}
-		// ´æÔÚ±ê¶¨Í¼Ïñ£¬µ«ÊÇ¶ÔÓ¦ÊıÁ¿¹ıÉÙ
+		// å­˜åœ¨æ ‡å®šå›¾åƒï¼Œä½†æ˜¯å¯¹åº”æ•°é‡è¿‡å°‘
 		else if (fileNames.size() > 0 && fileNames.size() < 10) {
-			cout << "Ïà»ú±ê¶¨Í¼ÏñÊıÁ¿¹ıÉÙ,ÎŞ·¨Íê³É±ê¶¨" << endl;
+			cout << "ç›¸æœºæ ‡å®šå›¾åƒæ•°é‡è¿‡å°‘,æ— æ³•å®Œæˆæ ‡å®š" << endl;
 			return false;
 		}
-		//ÀûÓÃ±ê¶¨Í¼Ïñ½øĞĞ±ê¶¨
+		//åˆ©ç”¨æ ‡å®šå›¾åƒè¿›è¡Œæ ‡å®š
 		else {
-            cout << "±ê¶¨Í¼Ïñ´æÔÚÇÒÊıÁ¿×ã¹»£¬ÕıÔÚ¶ÔÆä½øĞĞ±ê¶¨" << endl;
-            int boardWidth = 17;  // ÆåÅÌ¸ñºáÏòÄÚ½ÇµãÊıÁ¿
-            int boardHeight = 12; // ÆåÅÌ¸ñ×İÏòÄÚ½ÇµãÊıÁ¿
-            float squareSize = 1.f; // ÆåÅÌ¸ñ¸ñ×ÓµÄ´óĞ¡£¬µ¥Î»ÎªÃ×,Ëæ±ãÉèÖÃ£¬²»Ó°ÏìÏà»úÄÚ²Î¼ÆËã
+            cout << "æ ‡å®šå›¾åƒå­˜åœ¨ä¸”æ•°é‡è¶³å¤Ÿï¼Œæ­£åœ¨å¯¹å…¶è¿›è¡Œæ ‡å®š" << endl;
+            int boardWidth = 17;  // æ£‹ç›˜æ ¼æ¨ªå‘å†…è§’ç‚¹æ•°é‡
+            int boardHeight = 12; // æ£‹ç›˜æ ¼çºµå‘å†…è§’ç‚¹æ•°é‡
+            float squareSize = 1.f; // æ£‹ç›˜æ ¼æ ¼å­çš„å¤§å°ï¼Œå•ä½ä¸ºç±³,éšä¾¿è®¾ç½®ï¼Œä¸å½±å“ç›¸æœºå†…å‚è®¡ç®—
             Size boardSize(boardWidth, boardHeight);
 
             vector<vector<Point3f>> objectPoints;
@@ -82,7 +83,7 @@ bool cameraCalibrate::getIntrinsic(string cameraName) {
             this->Intrinsic = cameraMatrix;
             ofstream of(IntrinsicFile);
             if (of.is_open()) {
-                cout << "ÄÚ²ÎÎÄ¼ş´´½¨³É¹¦£¬ÕıÔÚĞ´ÈëÊı¾İ" << endl;
+                cout << "å†…å‚æ–‡ä»¶åˆ›å»ºæˆåŠŸï¼Œæ­£åœ¨å†™å…¥æ•°æ®" << endl;
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         if (j < 2)
